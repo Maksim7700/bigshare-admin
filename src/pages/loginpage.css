@@ -1,74 +1,101 @@
-body.login-page {
-	background-color: #f7f9fb;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+
+.admin-container{
+	display: flex;
+}
+
+.left-side {
+	width: 50%;
+	padding-top: 20%;
+	height:100vh;
+}
+.image-bighsare{
+	display: flex;
+	justify-content: center;
+}
+
+.right-side {
+	width: 50%;
+	padding-top: 10%;
+	height:100vh;
+	background: #E5E5E5;
+
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+}
+
+.title {
+	display: flex;
+	justify-content: center;
+	font-family: Montserrat;
+	font-weight: 700;
+	font-size: 34px;
+	line-height: 41px;
+	padding-bottom: 64px;
+}
+
+.login, .password {
+	font-family: Montserrat;
+	font-weight: 500;
+	font-size: 16px;
+	padding-bottom: 10px;
+}
+
+.form-login{
+	width: 350px;
+	height: 50px;
+	border: 10px;
+}
+
+label,input{
+	display:flex;
+	flex-direction:column;
+}
+
+#login, #password{
+	padding-left: 20px;
+}
+
+input[type="text"]::placeholder {
+	padding-top: 17px;
+	padding-bottom: 16px;
+	font-family: Montserrat;
+	font-weight: 400;
 	font-size: 14px;
 }
 
-
-
-.login-page .brand {
-	width: 90px;
-	height: 90px;
-	overflow: hidden;
-	border-radius: 50%;
-	margin: 40px auto;
-	box-shadow: 0 4px 8px rgba(0,0,0,.05);
-	position: relative;
+input[type="text"], input[type="password"] {
+	border: 1px solid #E8E8E8;
+	border-radius: 5px;
 }
 
-.login-page .brand img {
-	width: 100%;
+.password-input{
+	padding-top: 32px;
 }
 
-.login-page .card-wrapper {
-	width: 400px;
+.button-submit{
+	padding-top: 64px;
 }
 
-.login-page .card {
-	border-color: transparent;
-	box-shadow: 0 4px 8px rgba(0,0,0,.05);
+.login-now{
+	font-family: Montserrat;
+	font-weight: 400;
+	width: 347px;
+	height: 50px;
+	background-color: #1A9D63;
+	border: 1px solid #1A9D63;
+	color: white;
+	line-height: 20px;
 }
 
-.login-page .card.fat {
-	padding: 10px;
-	margin-top: 100px;
-	background-color: #f0f0f0;
+.spinner-login{
+	margin-left: 10px;
 }
 
-.login-page .card .card-title {
-	margin-bottom: 30px;
-}
-
-.login-page .form-control {
-	border-width: 2.3px;
-}
-
-.login-page .form-group label {
-	width: 100%;
-}
-
-.login-page .btn.btn-block {
-	padding: 12px 10px;
-}
-
-.login-page .footer {
-	margin: 40px 0;
-	color: #888;
-	text-align: center;
-}
-
-@media screen and (max-width: 425px) {
-	.login-page .card-wrapper {
-		width: 90%;
-		margin: 0 auto;
-	}
-}
-
-@media screen and (max-width: 320px) {
-	.login-page .card.fat {
-		padding: 0;
-	}
-
-	.login-page .card.fat .card-body {
-		padding: 15px;
-	}
+.red-text{
+	color: red;
 }

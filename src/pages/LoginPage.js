@@ -1,178 +1,126 @@
 import {useState} from 'react';
-import { connect } from 'react-redux';
-import { authenticate, authFailure, authSuccess } from '../redux/authActions';
+import {connect} from 'react-redux';
+import {authenticate, authFailure, authSuccess} from '../redux/authActions';
 import './loginpage.css';
 import {userLogin} from '../api/authenticationService';
-import {Alert,Spinner} from 'react-bootstrap';
+import {Alert, Spinner} from 'react-bootstrap';
 
-const LoginPage=({loading,error,...props})=>{
+const LoginPage = ({loading, error, ...props}) => {
 
+    const InvalidPasswordOrUsername = "INVALID_PASSWORD_OR_USERNAME";
+    const [errorUsername, setErrorUsername] = useState(false);
 
     const [values, setValues] = useState({
         username: '',
         password: ''
-        });
+    });
 
-    const handleSubmit=(evt)=>{
+    const handleSubmit = (evt) => {
         evt.preventDefault();
         props.authenticate();
 
-        userLogin(values).then((response)=>{
-
-            console.log("response",response);
-            if(response.status===200){
+        userLogin(values).then((response) => {
+            if (response.status === 200) {
                 props.setUser(response.data);
                 props.history.push('/dashboard');
-            }
-            else{
-               props.loginFailure('Something Wrong!Please Try Again'); 
-            }
-
-
-        }).catch((err)=>{
-
-            if(err && err.response){
-            
-            switch(err.response.status){
-                case 401:
-                    console.log("401 status");
-                    props.loginFailure("Authentication Failed.Bad Credentials");
-                    break;
-                default:
-                    props.loginFailure('Something Wrong!Please Try Again'); 
-
-            }
-
-            }
-            else{
+            } else {
                 props.loginFailure('Something Wrong!Please Try Again');
             }
-                
 
-            
+        }).catch((err) => {
+            if (err.response.data.status === 400 && err.response.data.errorCode === InvalidPasswordOrUsername) {
+                setErrorUsername(true);
+            }
+            if (err && err.response) {
+                switch (err.response.status) {
+                    case 401:
+                        props.loginFailure("Authentication Failed.Bad Credentials");
+                        break;
+                    default:
+                        props.loginFailure('Something Wrong!Please Try Again');
 
+                }
+            } else {
+                props.loginFailure('Something Wrong!Please Try Again');
+            }
         });
-        //console.log("Loading again",loading);
-
-        
     }
 
     const handleChange = (e) => {
         e.persist();
         setValues(values => ({
-        ...values,
-        [e.target.name]: e.target.value
+            ...values,
+            [e.target.name]: e.target.value
         }));
     };
 
-    console.log("Loading ",loading);
-
     return (
-        <div className="login-page">
-                   
-              
-                                            
-        <section className="h-100">
-        <div className="container h-100">
-       
-            <div className="row justify-content-md-center h-100">
-                <div className="card-wrapper">
+        <div className='admin-container'>
+            <div className='left-side'>
+                <div className='image-bighsare'><img id='image' src={process.env.PUBLIC_URL + '/bigshare.svg'}
+                                                     alt='bigshare'/></div>
+            </div>
+            <div className='right-side'>
+                <div className='title'>Login to your account</div>
+                <div className='container'>
+                    <div className='forma'>
 
-                    <div className="card fat">
-                        <div className="card-body">
-                            <h4 className="card-title">Login</h4>
-                            
-                            <form className="my-login-validation" onSubmit={handleSubmit} noValidate={false}>
-                                <div className="form-group">
-                                    <label htmlFor="email">User Name</label>
-                                    <input id="username" type="text" className="form-control" minLength={5} value={values.username} onChange={handleChange} name="username" required />
-                                    
-                                        <div className="invalid-feedback">
-                                            UserId is invalid
-                                        </div>
-                                    
-                                    
-                                    
-                                </div>
+                        <form className="my-login-validation" onSubmit={handleSubmit} noValidate={false}>
+                            <div className='login-input'>
+                                <label className='login' htmlFor='login'>Login</label>
+                                <input placeholder='Enter your email' id="login" type="text" className='form-login' minLength={5}
+                                       value={values.username} onChange={handleChange} name="username" required/>
+                            </div>
 
-                                <div className="form-group">
-                                    <label>Password
-                                        <a href="forgot.html" className="float-right">
-                                            Forgot Password?
-                                        </a>
-                                    </label>
-                                    <input id="password" type="password" className="form-control" minLength={6} value={values.password} onChange={handleChange} name="password" required/>
-                                    <div className="invalid-feedback">
-                                        Password is required
-                                    </div>
-                                </div>
+                            <div className='password-input'>
+                                <label className='password'>Password</label>
+                                <input placeholder='Password' id="password" type="password" className="form-login" minLength={6}
+                                       value={values.password} onChange={handleChange} name="password" required/>
+                                {errorUsername &&<div className='red-text'>
+                                    Username or password is invalid.
+                                </div>}
+                            </div>
 
-                                <div className="form-group">
-                                    <div className="custom-control custom-checkbox">
-                                        <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                                        <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
-                                     </div>
-                                </div>
-                                
-
-                                <div className="form-group m-0">
-                                    <button type="submit" className="btn btn-primary">
-                                        Login
-                                        {loading && (
-                                            <Spinner
+                            <div className="button-submit">
+                                <button type="submit" className="login-now">
+                                    Login now
+                                    {loading && (
+                                        <Spinner className='spinner-login'
                                             as="span"
                                             animation="border"
                                             size="sm"
                                             role="status"
                                             aria-hidden="true"
-                                          />
-                                        )}
-                                        {/* <ClipLoader
-                                        //css={override}
-                                        size={20}
-                                        color={"#123abc"}
-                                        loading={loading}
-                                        /> */}
-                                    </button>
-                                </div>
-                            </form>
-                            { error &&
-                            <Alert style={{marginTop:'20px'}} variant="danger">
-                                    {error}
-                                </Alert>
-
-                            }
-                            
-        
-                        </div>
+                                        />
+                                    )}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-        </div>
     )
 
 
-    
 }
 
-const mapStateToProps=({auth})=>{
-    console.log("state ",auth)
+const mapStateToProps = ({auth}) => {
     return {
-        loading:auth.loading,
-        error:auth.error
-}}
-
-
-const mapDispatchToProps=(dispatch)=>{
-
-    return {
-        authenticate :()=> dispatch(authenticate()),
-        setUser:(data)=> dispatch(authSuccess(data)),
-        loginFailure:(message)=>dispatch(authFailure(message))
+        loading: auth.loading,
+        error: auth.error
     }
 }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(LoginPage);
+const mapDispatchToProps = (dispatch) => {
+
+    return {
+        authenticate: () => dispatch(authenticate()),
+        setUser: (data) => dispatch(authSuccess(data)),
+        loginFailure: (message) => dispatch(authFailure(message))
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
